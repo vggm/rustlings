@@ -15,6 +15,26 @@ struct TeamScores {
     goals_conceded: u8,
 }
 
+
+fn save_scores<'a>(scores: &mut HashMap<&'a str, TeamScores>, team_name: &'a str, actual_score: TeamScores) {
+    match scores.get(team_name) {
+        Some(score) => {
+            scores.insert(
+                team_name, 
+                TeamScores { 
+                    goals_scored: score.goals_scored + actual_score.goals_scored, 
+                    goals_conceded: score.goals_conceded + actual_score.goals_conceded
+                }
+            );
+        },
+
+        None => {
+            scores.insert(team_name, actual_score);
+        }
+    }
+}
+
+
 fn build_scores_table(results: &str) -> HashMap<&str, TeamScores> {
     // The name of the team is the key and its associated struct is the value.
     let mut scores = HashMap::<&str, TeamScores>::new();
@@ -34,7 +54,8 @@ fn build_scores_table(results: &str) -> HashMap<&str, TeamScores> {
         let team_1_scores: TeamScores = TeamScores { goals_scored: team_1_score, goals_conceded: team_2_score };
         let team_2_scores: TeamScores = TeamScores { goals_scored: team_2_score, goals_conceded: team_1_score };
 
-        
+        save_scores(&mut scores, team_1_name, team_1_scores);
+        save_scores(&mut scores, team_2_name, team_2_scores);
     }
 
     scores
