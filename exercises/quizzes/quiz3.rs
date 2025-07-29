@@ -19,12 +19,8 @@ struct ReportCard<T> {
     student_age: u8,
 }
 
-trait GradeDisplay {
-    fn grade_display (&self) -> String;
-}
-
 // TODO: Adjust the impl block as described above.
-impl<T> ReportCard<T> {
+impl<T: Display> ReportCard<T> {
     fn print(&self) -> String {
         format!(
             "{} ({}) - achieved a grade of {}",
